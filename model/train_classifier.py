@@ -23,7 +23,15 @@ from functools import partial
 # python model/train_classifier.py data/DisasterResponse.db model/model.pkl
 
 def load_data(data_file):
-    # read in file
+    '''Return the data separated by X, y (features and target)
+
+    Parameters:
+        data_file (str): Data path
+
+    Return:
+        X, y (Panda DataFrames): Features and Targets
+
+    '''
     path = data_file
 
     engine = create_engine('sqlite:///' + path)
@@ -38,6 +46,16 @@ def load_data(data_file):
 
 
 def tokenize(text):
+    '''Return a list of string after tokenize the string
+
+    Parameters:
+        text (str): String to be tokenized
+
+
+    Return:
+        clean_tokens (list): List of string
+    
+    '''
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -49,7 +67,15 @@ def tokenize(text):
     return clean_tokens
 
 def build_model():
+    '''Return a pipeline builded with CountVectorizer and TfidTransformer
 
+    Parameters:
+        None
+
+    Return:
+        pipeline (object): builded pipeline
+    
+    '''
     # text processing and model pipeline
 
     pipeline = Pipeline([
@@ -73,6 +99,17 @@ def build_model():
 
 
 def train(X, y, model):
+    '''Return trained model
+    
+    Parameters:
+        X (Pandas Dataframe): Features of the model
+        y (Pandas Series): Target
+        model (object): Builded Pipeline
+
+    Return:
+        model (object): Trained model
+    
+    '''
     # train test split
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.33, random_state=42)
@@ -88,11 +125,31 @@ def train(X, y, model):
 
 
 def export_model(model, model_path):
+    '''Export the trained model
+    
+    Parameters:
+        model (object): Trained model
+        model_path (string): Path to save the trained model
+        
+    Return:
+        None
+        
+    '''
     # Export model as a pickle file
 
     pickle.dump(model, open(model_path, 'wb'))
 
 def run_pipeline(data_file, model_path):
+    '''Function to load the data, build, train and export the trained model
+
+    Parameters:
+        data_file (string): Path to the data
+        model_path (string): Path to save the trained model
+
+    Return:
+        None
+    
+    '''
     X, y = load_data(data_file)  # run ETL pipeline
     model = build_model()  # build model pipeline
     model = train(X, y, model)  # train model pipeline

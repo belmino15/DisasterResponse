@@ -6,6 +6,16 @@ from numpy import nan
 # python data/process_data.py data/messages.csv data/categories.csv data/DisasterResponse.db
 
 def load_data(messages_filepath, categories_filepath):
+    '''Load the data
+
+    Parameters:
+        messages_filepath (str): Messages path
+        categories_filepath (str): Categories path
+
+    Return:
+        df (Panda DataFrames): DataFrame with the data
+
+    '''
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
 
@@ -15,6 +25,15 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    '''Clean the data
+
+    Parameters:
+        df (Panda DataFrames): DataFrame with the data
+
+    Return:
+        df (Panda DataFrames): DataFrame with the cleaning data
+
+    '''
     categories = df.categories.str.split(';', expand= True)
 
     row = categories.head(1)
@@ -54,11 +73,30 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    '''Create a DataBase with the clean data
+
+    Parameters:
+        df (Panda DataFrames): DataFrame with the data
+        database_filename (string): DataBase filename to save the data
+
+    Return:
+        None
+
+    '''
     engine = create_engine('sqlite:///' + database_filename)
     df.to_sql('T_DisasterResponse', engine, if_exists= 'replace', index=False)
 
 
 def main():
+    '''Receive file paths then load, clean and save the data
+
+    Parameters:
+        None
+
+    Return:
+        None
+    
+    '''
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
